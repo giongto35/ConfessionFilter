@@ -1,0 +1,3 @@
+# ConfessionFilter
+
+This project is for filtering confession posts from Google drive. The qualified posts will be chosen if it does not violate Confession rule such as swearing or provoking or advertising... 
