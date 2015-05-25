@@ -69,7 +69,7 @@ if __name__ == '__main__':
         query = inverted_index.make_query_tfidf(doc)
         result = classify(inverted_index=inverted_index, category=category, query=query)
 
-        if result == 'OK':
+        if result == 'ERR':
             n_correct = n_correct + 1
 
     print 'Precision = %f' % (float(n_correct) / n_query)
