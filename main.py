@@ -42,18 +42,18 @@ if __name__ == '__main__':
     inverted_index.build_tfidf(len(category))
 
     # Formalize query
-    formalize_all_files('test_data')
+    formalize_all_files('testing_data')
 
     # Loading all query
-    pos_files = get_all_files('training_data/pos')
+    pos_files = get_all_files('testing_data/pos')
     pos_docs = []
     for file in pos_files:
-        pos_docs.extend(parse_all_terms(dictionary, 'training_data/pos/' + file))
+        pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file))
 
-    neg_files = get_all_files('training_data/neg')
+    neg_files = get_all_files('testing_data/neg')
     neg_docs = []
     for file in neg_files:
-        neg_docs.extend(parse_all_terms(dictionary, 'training_data/neg/' + file))
+        neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file))
 
     n_query = len(pos_docs) + len(neg_docs)
     n_correct = 0
