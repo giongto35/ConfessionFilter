@@ -55,21 +55,36 @@ if __name__ == '__main__':
     for file in neg_files:
         neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
 
-    n_query = len(pos_docs) + len(neg_docs)
+    n_query = 0
     n_correct = 0
 
     for doc in pos_docs:
         query = inverted_index.make_query_tfidf(dictionary, doc)
         result = classify(inverted_index=inverted_index, category=category, query=query)
 
+        n_query = n_query + 1
         if result == 'OK':
             n_correct = n_correct + 1
+
+        print '#%d Expected=OK, Given=%s, Precision= %f' % (n_query, result, float(n_correct) / n_query)
+
+        if n_query > 100:
+            break
 
     for doc in neg_docs:
         query = inverted_index.make_query_tfidf(dictionary, doc)
         result = classify(inverted_index=inverted_index, category=category, query=query)
 
+        n_query = n_query + 1
         if result == 'ERR':
             n_correct = n_correct + 1
+        else:
+            document = ""
+            for term in doc:
+                document = document + ' ' + term
+            print document
 
-    print 'Precision = %f' % (float(n_correct) / n_query)
+        print '#%d Expected=ERR, Given=%s, Precision= %f' % (n_query, result, float(n_correct) / n_query)
+
+        if n_query > 200:
+            break

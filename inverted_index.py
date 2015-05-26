@@ -4,8 +4,12 @@ class InvertedIndex(object):
 
     def __init__(self, n_terms):
         super(InvertedIndex, self).__init__()
-        self.index = [[]] * n_terms
-        self.freq = [[]] * n_terms
+        self.index = [None] * n_terms
+        self.freq = [None] * n_terms
+
+        for i in range(n_terms):
+            self.index[i] = []
+            self.freq[i] = []
 
     def add(self, dictionary, doc_id, doc_content):
         for term in doc_content:

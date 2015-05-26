@@ -12,11 +12,7 @@ class TFIDFWeighting(InvertedIndex):
         self.n_docs = n_docs
         n_words = len(self.index)
 
-        print n_words
-
-        self.tfidf = [[]] * n_words
-        for i in range(n_words):
-            self.tfidf[i] = [None] * len(self.index[i])
+        self.tfidf = [None] * n_words
 
         sum_freq = [0] * n_docs
         for i in range(n_words):
@@ -25,11 +21,11 @@ class TFIDFWeighting(InvertedIndex):
 
         for i in range(n_words):
             idf = math.log(float(n_docs) / len(self.index[i]))
-
+            self.tfidf[i] = []
             for j in range(len(self.index[i])):
-                tf = math.sqrt(float(self.freq[i][j]) / sum_freq[self.index[i][j]])
+                tf = float(self.freq[i][j]) / sum_freq[self.index[i][j]]
 
-                self.tfidf[i][j] = tf * idf
+                self.tfidf[i].append(tf * idf)
 
     def make_query_tfidf(self, dictionary, query):
         n_words = len(self.index)
@@ -44,7 +40,7 @@ class TFIDFWeighting(InvertedIndex):
         tfidf = [0] * n_words
         for i in range(n_words):
             idf = math.log(float(self.n_docs) / len(self.index[i]))
-            tf = math.sqrt(float(freq[i]) / sum_freq)
+            tf = float(freq[i]) / sum_freq
 
             tfidf[i] = tf * idf
 

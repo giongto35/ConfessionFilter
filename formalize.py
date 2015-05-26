@@ -43,10 +43,10 @@ def formalize_all_data(path, file, verbose=True):
     pos_confs, neg_confs = load_all_data(path + '/' + raw_document_folder + '/' + file, verbose)
 
     with open(path + '/' + pos_document_folder + '/' + file.replace('.csv', '.json'), 'w') as pos_file:
-        pos_file.write('%s' % json.dumps(pos_confs))
+        pos_file.write('%s' % json.dumps(pos_confs, ensure_ascii=False).encode('utf-8'))
 
     with open(path + '/' + neg_document_folder + '/' + file.replace('.csv', '.json'), 'w') as neg_file:
-        neg_file.write('%s' % json.dumps(neg_confs))
+        neg_file.write('%s' % json.dumps(neg_confs, ensure_ascii=False).encode('utf-8'))
 
 
 def formalize_all_files(path, verbose=True):
