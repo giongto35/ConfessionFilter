@@ -6,7 +6,7 @@ def classify(inverted_index, category, query, top_k=100, threshold=0.5):
 
     for i in range(n_words):
         if query[i] > 0:
-            for j in range(inverted_index.index[i]):
+            for j in range(len(inverted_index.index[i])):
                 id = inverted_index.index[i][j]
                 if distance[id] == float('inf'):
                     distance[id] = 0
