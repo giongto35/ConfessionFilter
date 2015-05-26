@@ -44,7 +44,7 @@ class TFIDFWeighting(InvertedIndex):
         tfidf = [0] * n_words
         for i in range(n_words):
             idf = math.log(float(self.n_docs) / len(self.index[i]))
-            tf = freq[i] / sum_freq
+            tf = math.sqrt(float(freq[i]) / sum_freq)
 
             tfidf[i] = tf * idf
 
