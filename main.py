@@ -48,12 +48,12 @@ if __name__ == '__main__':
     pos_files = get_all_files('testing_data/pos')
     pos_docs = []
     for file in pos_files:
-        pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file))
+        pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
 
     neg_files = get_all_files('testing_data/neg')
     neg_docs = []
     for file in neg_files:
-        neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file))
+        neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
 
     n_query = len(pos_docs) + len(neg_docs)
     n_correct = 0
