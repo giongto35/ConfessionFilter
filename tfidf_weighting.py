@@ -72,7 +72,7 @@ class TFIDFWeighting(InvertedIndex):
                 top_k = i
                 break
             if category[id] == 1:
-                n_correct = n_correct + 1
+                n_correct += 1
 
         if top_k == 0:
             return 0

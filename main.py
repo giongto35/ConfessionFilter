@@ -64,9 +64,9 @@ if __name__ == '__main__':
         for doc in pos_docs:
             result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
 
-            n_query = n_query + 1
+            n_query += 1
             if result == 1:
-                n_correct = n_correct + 1
+                n_correct += 1
 
             print '#%d Expected=1, Given=%s, Precision=%f' % (n_query, result, float(n_correct) / n_query)
 
@@ -76,9 +76,9 @@ if __name__ == '__main__':
         for doc in neg_docs:
             result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
 
-            n_query = n_query + 1
+            n_query += 1
             if result == 0:
-                n_correct = n_correct + 1
+                n_correct += 1
             else:
                 document = ""
                 for term in doc:
@@ -129,9 +129,9 @@ if __name__ == '__main__':
         for doc in pos_docs:
             result = inverted_index.classify(dictionary=dictionary, query=doc)
 
-            n_query = n_query + 1
+            n_query += 1
             if result == 1:
-                n_correct = n_correct + 1
+                n_correct += 1
 
             print '#%d Expected=1, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
 
@@ -141,9 +141,9 @@ if __name__ == '__main__':
         for doc in neg_docs:
             result = inverted_index.classify(dictionary=dictionary, query=doc)
 
-            n_query = n_query + 1
+            n_query += 1
             if result == 0:
-                n_correct = n_correct + 1
+                n_correct += 1
             else:
                 document = ""
                 for term in doc:
