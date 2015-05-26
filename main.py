@@ -61,8 +61,8 @@ if __name__ == '__main__':
         n_query = 0
         n_correct = 0
 
-        for doc in pos_docs:
-            result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
+        for i in range(len(pos_docs)):
+            result = inverted_index.classify(dictionary=dictionary, category=category, doc=pos_docs[i])
 
             n_query += 1
             if result == 1:
@@ -70,25 +70,19 @@ if __name__ == '__main__':
 
             print '#%d Expected=1, Given=%s, Precision=%f' % (n_query, result, float(n_correct) / n_query)
 
-            if n_query > 100:
-                break
-
-        for doc in neg_docs:
-            result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
+        for i in range(len(neg_docs)):
+            result = inverted_index.classify(dictionary=dictionary, category=category, doc=neg_docs[i])
 
             n_query += 1
             if result == 0:
                 n_correct += 1
             else:
                 document = ""
-                for term in doc:
+                for term in neg_docs[i]:
                     document = document + ' ' + term
                 print document
 
             print '#%d Expected=0, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
-
-            if n_query > 200:
-                break
 
     elif sys.argv[1] == 'bayes':
 
@@ -126,8 +120,8 @@ if __name__ == '__main__':
         n_query = 0
         n_correct = 0
 
-        for doc in pos_docs:
-            result = inverted_index.classify(dictionary=dictionary, query=doc)
+        for i in range(len(pos_docs)):
+            result = inverted_index.classify(dictionary=dictionary, doc=pos_docs[i])
 
             n_query += 1
             if result == 1:
@@ -135,22 +129,16 @@ if __name__ == '__main__':
 
             print '#%d Expected=1, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
 
-            if n_query > 100:
-                break
-
-        for doc in neg_docs:
-            result = inverted_index.classify(dictionary=dictionary, query=doc)
+        for i in range(len(neg_docs)):
+            result = inverted_index.classify(dictionary=dictionary, doc=neg_docs[i])
 
             n_query += 1
             if result == 0:
                 n_correct += 1
             else:
                 document = ""
-                for term in doc:
+                for term in neg_docs[i]:
                     document = document + ' ' + term
                 print document
 
             print '#%d Expected=0, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
-
-            if n_query > 200:
-                break

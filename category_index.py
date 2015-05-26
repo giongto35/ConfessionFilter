@@ -22,7 +22,7 @@ class CagegoryIndex(InvertedIndex):
                 self.frequency[category[self.index[i][j]]][i] += self.freq[i][j]
                 self.sum_frequency[category[self.index[i][j]]] += self.freq[i][j]
 
-    def classify(self, dictionary, query):
+    def classify(self, dictionary, doc):
         n_terms = len(self.index)
 
         ret = None
@@ -30,7 +30,7 @@ class CagegoryIndex(InvertedIndex):
 
         for category in range(2):
             score = math.log(float(self.sum_frequency[category]) / n_terms)
-            for term in query:
+            for term in doc:
                 freq = 0
                 if term in dictionary:
                     freq = self.frequency[category][dictionary[term]]

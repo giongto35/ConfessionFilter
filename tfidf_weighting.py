@@ -46,8 +46,8 @@ class TFIDFWeighting(InvertedIndex):
 
         return tfidf
 
-    def classify(self, dictionary, category, query, top_k=50, ratio_threshold=0.60, distance_threshold=0.0003):
-        query = self.make_query_tfidf(dictionary, query)
+    def classify(self, dictionary, category, doc, top_k=50, ratio_threshold=0.60, distance_threshold=0.0003):
+        query = self.make_query_tfidf(dictionary, doc)
 
         n_terms = len(query)
 
