@@ -5,13 +5,13 @@ import sys
 from utils import *
 from formalize import formalize_all_files
 from parse import parse_all_terms
-from tfidf_weighting import TFIDFWeighting
-from query_dot import classify
 
 
 if __name__ == '__main__':
-    # Formalize dataset
+
+    # Formalization
     formalize_all_files('training_data')
+    formalize_all_files('testing_data')
 
     # Load all data
     dictionary = {}
@@ -25,66 +25,132 @@ if __name__ == '__main__':
     for file in neg_files:
         neg_docs.extend(parse_all_terms(dictionary, 'training_data/neg/' + file))
 
-    # Build inverted index
-    n_terms = len(dictionary)
-    inverted_index = TFIDFWeighting(n_terms)
+    if sys.argv[1] == 'dot':
 
-    category = []
-    for doc in pos_docs:
-        inverted_index.add(dictionary, len(category), doc)
-        category.append(1)
+        from tfidf_weighting import TFIDFWeighting
 
-    for doc in neg_docs:
-        inverted_index.add(dictionary, len(category), doc)
-        category.append(-1)
+        # Build inverted index
+        n_terms = len(dictionary)
+        inverted_index = TFIDFWeighting(n_terms)
 
-    # Build tfidf based on inverted index
-    inverted_index.build_tfidf(len(category))
+        category = []
+        for doc in pos_docs:
+            inverted_index.add(dictionary, len(category), doc)
+            category.append(1)
 
-    # Formalize query
-    formalize_all_files('testing_data')
+        for doc in neg_docs:
+            inverted_index.add(dictionary, len(category), doc)
+            category.append(0)
 
-    # Loading all query
-    pos_files = get_all_files('testing_data/pos')
-    pos_docs = []
-    for file in pos_files:
-        pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
+        # Build tfidf based on inverted index
+        inverted_index.build(len(category))
 
-    neg_files = get_all_files('testing_data/neg')
-    neg_docs = []
-    for file in neg_files:
-        neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
+        # TESTING PHASE
 
-    n_query = 0
-    n_correct = 0
+        # Loading all query
+        pos_files = get_all_files('testing_data/pos')
+        pos_docs = []
+        for file in pos_files:
+            pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
 
-    for doc in pos_docs:
-        query = inverted_index.make_query_tfidf(dictionary, doc)
-        result = classify(inverted_index=inverted_index, category=category, query=query)
+        neg_files = get_all_files('testing_data/neg')
+        neg_docs = []
+        for file in neg_files:
+            neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
 
-        n_query = n_query + 1
-        if result == 'OK':
-            n_correct = n_correct + 1
+        n_query = 0
+        n_correct = 0
 
-        print '#%d Expected=OK, Given=%s, Precision= %f' % (n_query, result, float(n_correct) / n_query)
+        for doc in pos_docs:
+            result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
 
-        if n_query > 100:
-            break
+            n_query = n_query + 1
+            if result == 1:
+                n_correct = n_correct + 1
 
-    for doc in neg_docs:
-        query = inverted_index.make_query_tfidf(dictionary, doc)
-        result = classify(inverted_index=inverted_index, category=category, query=query)
+            print '#%d Expected=1, Given=%s, Precision=%f' % (n_query, result, float(n_correct) / n_query)
 
-        n_query = n_query + 1
-        if result == 'ERR':
-            n_correct = n_correct + 1
-        else:
-            document = ""
-            for term in doc:
-                document = document + ' ' + term
-            print document
+            if n_query > 100:
+                break
 
-        print '#%d Expected=ERR, Given=%s, Precision= %f' % (n_query, result, float(n_correct) / n_query)
+        for doc in neg_docs:
+            result = inverted_index.classify(dictionary=dictionary, category=category, query=doc)
 
-        if n_query > 200:
-            break
+            n_query = n_query + 1
+            if result == 0:
+                n_correct = n_correct + 1
+            else:
+                document = ""
+                for term in doc:
+                    document = document + ' ' + term
+                print document
+
+            print '#%d Expected=0, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
+
+            if n_query > 200:
+                break
+
+    elif sys.argv[1] == 'bayes':
+
+        from category_index import CagegoryIndex
+
+        # Build inverted index
+        n_terms = len(dictionary)
+        inverted_index = CagegoryIndex(n_terms)
+
+        category = []
+        for doc in pos_docs:
+            inverted_index.add(dictionary, len(category), doc)
+            category.append(1)
+
+        for doc in neg_docs:
+            inverted_index.add(dictionary, len(category), doc)
+            category.append(0)
+
+        # Initialize for bayes
+        inverted_index.build(category)
+
+        # TESTING PHASE
+
+        # Loading all query
+        pos_files = get_all_files('testing_data/pos')
+        pos_docs = []
+        for file in pos_files:
+            pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
+
+        neg_files = get_all_files('testing_data/neg')
+        neg_docs = []
+        for file in neg_files:
+            neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
+
+        n_query = 0
+        n_correct = 0
+
+        for doc in pos_docs:
+            result = inverted_index.classify(dictionary=dictionary, query=doc)
+
+            n_query = n_query + 1
+            if result == 1:
+                n_correct = n_correct + 1
+
+            print '#%d Expected=1, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
+
+            if n_query > 100:
+                break
+
+        for doc in neg_docs:
+            result = inverted_index.classify(dictionary=dictionary, query=doc)
+
+            n_query = n_query + 1
+            if result == 0:
+                n_correct = n_correct + 1
+            else:
+                document = ""
+                for term in doc:
+                    document = document + ' ' + term
+                print document
+
+            print '#%d Expected=0, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
+
+            if n_query > 200:
+                break

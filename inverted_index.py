@@ -18,4 +18,4 @@ class InvertedIndex(object):
                 if len(self.index[term_id]) == 0 or self.index[term_id][-1] != doc_id:
                     self.index[term_id].append(doc_id)
                     self.freq[term_id].append(0)
-                self.freq[term_id][-1] = self.freq[term_id][-1] + 1
+                self.freq[term_id][-1] += + 1
