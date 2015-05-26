@@ -1,4 +1,4 @@
-def classify(inverted_index, category, query, top_k=2000, ratio_threshold=0.72, distance_threshold=0.005):
+def classify(inverted_index, category, query, top_k=50, ratio_threshold=0.60, distance_threshold=0.0003):
     n_words = len(query)
 
     n_docs = inverted_index.n_docs
@@ -18,7 +18,7 @@ def classify(inverted_index, category, query, top_k=2000, ratio_threshold=0.72, 
     n_correct = 0
     for i in range(min(top_k, n_docs)):
         id = ranked_list[i]
-        if distance[id] == float('inf') or distance[id] > distance_threshold:
+        if distance[id] == float('inf') or distance[id] > distance[ranked_list[0]] * 2 or distance[id] > distance_threshold:
             top_k = i
             break
         if category[id] == 1:
@@ -27,7 +27,7 @@ def classify(inverted_index, category, query, top_k=2000, ratio_threshold=0.72, 
     if top_k == 0:
         return 'ERR'
 
-    print '%d / %d - %f' % (n_correct, top_k, distance[ranked_list[top_k - 1]])
+    print '%d / %d - %f, %f' % (n_correct, top_k, distance[ranked_list[0]], distance[ranked_list[top_k - 1]])
 
     if float(n_correct) / top_k > ratio_threshold:
         return 'OK'
