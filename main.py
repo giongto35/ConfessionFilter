@@ -78,7 +78,7 @@ if __name__ == '__main__':
                 n_correct += 1
             else:
                 document = ""
-                for term in neg_docs[i]2:
+                for term in neg_docs[i]:
                     document = document + ' ' + term
                 print document
 
