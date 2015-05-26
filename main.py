@@ -59,14 +59,14 @@ if __name__ == '__main__':
     n_correct = 0
 
     for doc in pos_docs:
-        query = inverted_index.make_query_tfidf(doc)
+        query = inverted_index.make_query_tfidf(dictionary, doc)
         result = classify(inverted_index=inverted_index, category=category, query=query)
 
         if result == 'OK':
             n_correct = n_correct + 1
 
     for doc in neg_docs:
-        query = inverted_index.make_query_tfidf(doc)
+        query = inverted_index.make_query_tfidf(dictionary, doc)
         result = classify(inverted_index=inverted_index, category=category, query=query)
 
         if result == 'ERR':
