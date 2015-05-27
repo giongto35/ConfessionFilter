@@ -18,12 +18,14 @@ if __name__ == '__main__':
     pos_files = get_all_files('training_data/pos')
     pos_docs = []
     for file in pos_files:
-        pos_docs.extend(parse_all_terms(dictionary, 'training_data/pos/' + file))
+        if "json" in file:
+            pos_docs.extend(parse_all_terms(dictionary, 'training_data/pos/' + file))
 
     neg_files = get_all_files('training_data/neg')
     neg_docs = []
     for file in neg_files:
-        neg_docs.extend(parse_all_terms(dictionary, 'training_data/neg/' + file))
+        if "json" in file:
+            neg_docs.extend(parse_all_terms(dictionary, 'training_data/neg/' + file))
 
     if sys.argv[1] == 'dot':
 
@@ -51,12 +53,14 @@ if __name__ == '__main__':
         pos_files = get_all_files('testing_data/pos')
         pos_docs = []
         for file in pos_files:
-            pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
+            if "json" in file:
+                pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
 
         neg_files = get_all_files('testing_data/neg')
         neg_docs = []
         for file in neg_files:
-            neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
+            if "json" in file:
+                neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
 
         n_query = 0
         n_correct = 0
@@ -110,12 +114,14 @@ if __name__ == '__main__':
         pos_files = get_all_files('testing_data/pos')
         pos_docs = []
         for file in pos_files:
-            pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
+            if "json" in file:
+                pos_docs.extend(parse_all_terms(dictionary, 'testing_data/pos/' + file, fixed_dictionary=True))
 
         neg_files = get_all_files('testing_data/neg')
         neg_docs = []
         for file in neg_files:
-            neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
+            if "json" in file:
+                neg_docs.extend(parse_all_terms(dictionary, 'testing_data/neg/' + file, fixed_dictionary=True))
 
         n_query = 0
         n_correct = 0
