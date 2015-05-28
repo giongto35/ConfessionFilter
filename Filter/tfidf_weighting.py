@@ -52,23 +52,21 @@ class TFIDFWeighting(InvertedIndex):
         n_terms = len(query)
 
         n_docs = self.n_docs
-        distance = [float('inf')] * n_docs
+        distance = [0] * n_docs
 
         for i in range(n_terms):
             if query[i] > 0:
                 for j in range(len(self.index[i])):
                     id = self.index[i][j]
-                    if distance[id] == float('inf'):
-                        distance[id] = 0
                     distance[id] = distance[id] + query[i] * self.tfidf[i][j]
 
-        ranked_list = sorted(range(n_docs), key=lambda k: distance[k])
+        ranked_list = sorted(range(n_docs), key=lambda k: -distance[k])
         top_k = min(top_k, n_docs)
 
         n_correct = 0
         for i in range(min(top_k, n_docs)):
             id = ranked_list[i]
-            if distance[id] == float('inf') or distance[id] > distance[ranked_list[0]] * 2 or distance[id] > distance_threshold:
+            if distance[id] == 0:  # or distance[id] < distance[ranked_list[0]] / 2:
                 top_k = i
                 break
             if category[id] == 1:
