@@ -1,3 +1,9 @@
+# Training directory
+training_directory = 'training_data'
+
+# Testing directory
+testing_directory = 'testing_data'
+
 # Raw documents
 raw_document_folder = 'raw'
 
