@@ -1,3 +1,4 @@
 *.pyc
 *.json
 .DS_STORE
+settings_local.py

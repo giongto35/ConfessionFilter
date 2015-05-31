@@ -3,6 +3,9 @@
 import os
 import sys
 
+# Before importing some Django lib, we must have this
+from django.core.wsgi import get_wsgi_application
+
 from utils import *
 from configurations import *
 from formalize import formalize_all_files
@@ -15,11 +18,42 @@ from category_index import CagegoryIndex
 
 if __name__ == '__main__':
 
+    # Import Django environment
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configurations.settings")
+
+
+# Improt Django models
+from Filter.models import ConfessionGroup, ConfessionDocument
+
+
+if __name__ == '__main__':
+
+    application = get_wsgi_application()
+
+    # Initialize ConfessionGroup
+    positive = ConfessionGroup.objects.filter(label='positive')
+    if len(positive) == 0:
+        positive = ConfessionGroup.objects.create(label='positive')
+        positive.save()
+    else:
+        positive = positive[0]
+
+    negative = ConfessionGroup.objects.filter(label='negative')
+    if len(negative) == 0:
+        negative = ConfessionGroup.objects.create(label='negative')
+        negative.save()
+    else:
+        negative = negative[0]
+
+    # Intialize paths
+
     training_positive_directory = os.path.join(training_directory, pos_document_folder)
     training_negative_directory = os.path.join(training_directory, neg_document_folder)
 
     testing_positive_directory = os.path.join(testing_directory, pos_document_folder)
     testing_negative_directory = os.path.join(testing_directory, neg_document_folder)
+
+    # Intialize variables
 
     dictionary = {}
     category = []
@@ -86,7 +120,7 @@ if __name__ == '__main__':
 
     # Test the result
     # Compute ratio between false_positive and (false_negative + false_positive)
-    def test():
+    def evaluate():
         # Use global variables
         global dictionary
         global category
@@ -144,4 +178,4 @@ if __name__ == '__main__':
                 print '#%d Expected=0, Given=%d, Ratio=%f' % (false_positive + false_negative, result, false_positive / float(false_positive + false_negative))
 
     intialize()
-    test()
+    evaluate()
