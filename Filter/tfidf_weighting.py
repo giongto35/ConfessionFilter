@@ -1,6 +1,7 @@
 import math
 
 from inverted_index import InvertedIndex
+from configurations import eps
 
 
 class TFIDFWeighting(InvertedIndex):
@@ -14,13 +15,15 @@ class TFIDFWeighting(InvertedIndex):
 
         self.tfidf = [None] * n_terms
 
-        sum_freq = [0] * n_docs
+        sum_freq = [eps] * n_docs
         for i in range(n_terms):
             for j in range(len(self.index[i])):
                 sum_freq[self.index[i][j]] += self.freq[i][j]
 
         for i in range(n_terms):
-            idf = math.log(float(n_docs) / len(self.index[i]))
+            # Add eps to avoid divide by zero
+            idf = math.log(self.n_docs / float(eps + len(self.index[i])))
+
             self.tfidf[i] = []
             for j in range(len(self.index[i])):
                 tf = float(self.freq[i][j]) / sum_freq[self.index[i][j]]
@@ -30,7 +33,8 @@ class TFIDFWeighting(InvertedIndex):
     def make_query_tfidf(self, dictionary, query):
         n_terms = len(self.index)
 
-        sum_freq = 0
+        # Add eps to avoid divide by zero
+        sum_freq = eps
         freq = [0] * n_terms
         for field in query:
             term = field['term']
@@ -41,7 +45,9 @@ class TFIDFWeighting(InvertedIndex):
 
         tfidf = [0] * n_terms
         for i in range(n_terms):
-            idf = math.log(float(self.n_docs) / len(self.index[i]))
+            # Add eps to avoid divide by zero
+            idf = math.log(self.n_docs / float(eps + len(self.index[i])))
+
             tf = float(freq[i]) / sum_freq
 
             tfidf[i] = tf * idf

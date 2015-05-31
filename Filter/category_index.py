@@ -1,6 +1,7 @@
 import math
 
 from inverted_index import InvertedIndex
+from configurations import eps
 
 
 class CagegoryIndex(InvertedIndex):
@@ -36,7 +37,7 @@ class CagegoryIndex(InvertedIndex):
                 freq = 0
                 if term in dictionary:
                     freq = self.frequency[category][dictionary[term]]
-                score += math.log(weight * (freq + 1.0) / (self.sum_frequency[category] + n_terms))
+                score += math.log(weight * (freq + 1.0) / (self.sum_frequency[category] + n_terms) + eps)
 
             if ret is None or ret_score < score:
                 ret = category

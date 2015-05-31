@@ -12,3 +12,9 @@ pos_document_folder = 'pos'
 
 # Negative documents
 neg_document_folder = 'neg'
+
+# Dictionary directory
+dictionary_directory = 'dictionary'
+
+# Edit eps to avoid divide by zero when using external dictionary
+eps = 0

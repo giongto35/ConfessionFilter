@@ -41,13 +41,13 @@ if __name__ == '__main__':
         pos_docs = []
         for file in pos_files:
             if "json" in file:
-                pos_docs.extend(extract_all_terms(dictionary, os.path.join(training_positive_directory, file)))
+                pos_docs.extend(extract_all_terms(dictionary, os.path.join(training_positive_directory, file), use_external_dictionaries=False))
 
         neg_files = get_all_files(training_negative_directory)
         neg_docs = []
         for file in neg_files:
             if "json" in file:
-                neg_docs.extend(extract_all_terms(dictionary, os.path.join(training_negative_directory, file)))
+                neg_docs.extend(extract_all_terms(dictionary, os.path.join(training_negative_directory, file), use_external_dictionaries=False))
 
         # Choose the right algorithm
         if sys.argv[1] == 'dot':
@@ -84,9 +84,9 @@ if __name__ == '__main__':
             # Initialize for bayes
             inverted_index.build(category)
 
-    # Test the result
+    # Evaluate the result
     # Compute ratio between false_positive and (false_negative + false_positive)
-    def test():
+    def evaluate():
         # Use global variables
         global dictionary
         global category
@@ -97,13 +97,13 @@ if __name__ == '__main__':
         pos_docs = []
         for file in pos_files:
             if "json" in file:
-                pos_docs.extend(extract_all_terms(dictionary, os.path.join(testing_positive_directory, file), fixed_dictionary=True))
+                pos_docs.extend(extract_all_terms(dictionary, os.path.join(testing_positive_directory, file), fixed_dictionary=True, use_external_dictionaries=False))
 
         neg_files = get_all_files(testing_negative_directory)
         neg_docs = []
         for file in neg_files:
             if "json" in file:
-                neg_docs.extend(extract_all_terms(dictionary, os.path.join(testing_negative_directory, file), fixed_dictionary=True))
+                neg_docs.extend(extract_all_terms(dictionary, os.path.join(testing_negative_directory, file), fixed_dictionary=True, use_external_dictionaries=False))
 
         false_negative = 0
         false_positive = 0
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             if result == 0:
                 false_positive += 1
 
-                print '#%d Expected=1, Given=%d, Ratio=%f' % (false_positive + false_negative, result, false_positive / float(false_positive + false_negative))
+                print '#%d Expected=1, Given=%d, Ratio=%f' % (i, result, false_positive / float(false_positive + false_negative))
 
         for i in range(len(neg_docs)):
             # Choose the right algorithm
@@ -141,7 +141,7 @@ if __name__ == '__main__':
             if result == 0:
                 false_negative += 1
 
-                print '#%d Expected=0, Given=%d, Ratio=%f' % (false_positive + false_negative, result, false_positive / float(false_positive + false_negative))
+                print '#%d Expected=0, Given=%d, Ratio=%f' % (i, result, false_positive / float(false_positive + false_negative))
 
     intialize()
-    test()
+    evaluate()
