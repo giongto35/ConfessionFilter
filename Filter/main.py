@@ -6,13 +6,11 @@ import sys
 from utils import *
 from configurations import *
 from formalize import formalize_all_files
-from parse import parse_all_terms
+from extractor import extract_all_terms
 
 from inverted_index import InvertedIndex
 from tfidf_weighting import TFIDFWeighting
 from category_index import CagegoryIndex
-
-
 
 
 if __name__ == '__main__':
@@ -43,13 +41,13 @@ if __name__ == '__main__':
         pos_docs = []
         for file in pos_files:
             if "json" in file:
-                pos_docs.extend(parse_all_terms(dictionary, os.path.join(training_positive_directory, file)))
+                pos_docs.extend(extract_all_terms(dictionary, os.path.join(training_positive_directory, file)))
 
         neg_files = get_all_files(training_negative_directory)
         neg_docs = []
         for file in neg_files:
             if "json" in file:
-                neg_docs.extend(parse_all_terms(dictionary, os.path.join(training_negative_directory, file)))
+                neg_docs.extend(extract_all_terms(dictionary, os.path.join(training_negative_directory, file)))
 
         # Choose the right algorithm
         if sys.argv[1] == 'dot':
@@ -87,7 +85,8 @@ if __name__ == '__main__':
             inverted_index.build(category)
 
     # Test the result
-    def test(test_positive=True, test_negative=True):
+    # Compute ratio between false_positive and (false_negative + false_positive)
+    def test():
         # Use global variables
         global dictionary
         global category
@@ -98,49 +97,51 @@ if __name__ == '__main__':
         pos_docs = []
         for file in pos_files:
             if "json" in file:
-                pos_docs.extend(parse_all_terms(dictionary, os.path.join(testing_positive_directory, file), fixed_dictionary=True))
+                pos_docs.extend(extract_all_terms(dictionary, os.path.join(testing_positive_directory, file), fixed_dictionary=True))
 
         neg_files = get_all_files(testing_negative_directory)
         neg_docs = []
         for file in neg_files:
             if "json" in file:
-                neg_docs.extend(parse_all_terms(dictionary, os.path.join(testing_negative_directory, file), fixed_dictionary=True))
+                neg_docs.extend(extract_all_terms(dictionary, os.path.join(testing_negative_directory, file), fixed_dictionary=True))
 
-        n_query = 0
-        n_correct = 0
+        false_negative = 0
+        false_positive = 0
 
-        if test_positive:
-            for i in range(len(pos_docs)):
-                # Choose the right algorithm
-                if sys.argv[1] == 'dot':
-                    result = inverted_index.classify(dictionary=dictionary, category=category, doc=pos_docs[i])
-                elif sys.argv[1] == 'bayes':
-                    result = inverted_index.classify(dictionary=dictionary, doc=pos_docs[i])
+        for i in range(len(pos_docs)):
+            # Choose the right algorithm
+            if sys.argv[1] == 'dot':
+                result = inverted_index.classify(dictionary=dictionary, category=category, doc=pos_docs[i])
+            elif sys.argv[1] == 'bayes':
+                result = inverted_index.classify(dictionary=dictionary, doc=pos_docs[i])
 
-                n_query += 1
-                if result == 1:
-                    n_correct += 1
+            # n_query += 1
+            # if result == 1:
+            #     n_correct += 1
+            if result == 0:
+                false_positive += 1
 
-                print '#%d Expected=1, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
+                print '#%d Expected=1, Given=%d, Ratio=%f' % (false_positive + false_negative, result, false_positive / float(false_positive + false_negative))
 
-        if test_negative:
-            for i in range(len(neg_docs)):
-                # Choose the right algorithm
-                if sys.argv[1] == 'dot':
-                    result = inverted_index.classify(dictionary=dictionary, category=category, doc=neg_docs[i])
-                elif sys.argv[1] == 'bayes':
-                    result = inverted_index.classify(dictionary=dictionary, doc=neg_docs[i])
+        for i in range(len(neg_docs)):
+            # Choose the right algorithm
+            if sys.argv[1] == 'dot':
+                result = inverted_index.classify(dictionary=dictionary, category=category, doc=neg_docs[i])
+            elif sys.argv[1] == 'bayes':
+                result = inverted_index.classify(dictionary=dictionary, doc=neg_docs[i])
 
-                n_query += 1
-                if result == 0:
-                    n_correct += 1
-                else:
-                    document = ""
-                    for term in neg_docs[i]:
-                        document = document + ' ' + term
-                    print document
+            # n_query += 1
+            # if result == 0:
+            #     n_correct += 1
+            # else:
+            #     document = ""
+            #     for term in neg_docs[i]:
+            #         document = document + ' ' + term
+            #     print document
+            if result == 0:
+                false_negative += 1
 
-                print '#%d Expected=0, Given=%d, Precision=%f' % (n_query, result, float(n_correct) / n_query)
+                print '#%d Expected=0, Given=%d, Ratio=%f' % (false_positive + false_negative, result, false_positive / float(false_positive + false_negative))
 
     intialize()
-    test(test_positive=False, test_negative=True)
+    test()

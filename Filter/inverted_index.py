@@ -12,10 +12,12 @@ class InvertedIndex(object):
             self.freq[i] = []
 
     def add(self, dictionary, doc_id, doc_content):
-        for term in doc_content:
+        for field in doc_content:
+            term = field['term']
+            weight = field['weight']
             if term in dictionary:
                 term_id = dictionary[term]
                 if len(self.index[term_id]) == 0 or self.index[term_id][-1] != doc_id:
                     self.index[term_id].append(doc_id)
                     self.freq[term_id].append(0)
-                self.freq[term_id][-1] += 1
+                self.freq[term_id][-1] += weight

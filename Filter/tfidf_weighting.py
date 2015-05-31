@@ -32,10 +32,12 @@ class TFIDFWeighting(InvertedIndex):
 
         sum_freq = 0
         freq = [0] * n_terms
-        for term in query:
+        for field in query:
+            term = field['term']
+            weight = field['weight']
             if term in dictionary:
-                freq[dictionary[term]] += 1
-                sum_freq += 1
+                freq[dictionary[term]] += weight
+                sum_freq += weight
 
         tfidf = [0] * n_terms
         for i in range(n_terms):
@@ -46,27 +48,27 @@ class TFIDFWeighting(InvertedIndex):
 
         return tfidf
 
-    def classify(self, dictionary, category, doc, top_k=50, ratio_threshold=0.60, distance_threshold=0.0003):
+    def classify(self, dictionary, category, doc, top_k=50, ratio_threshold=0.60, similarity_threshold=0.0003, verbose=False):
         query = self.make_query_tfidf(dictionary, doc)
 
         n_terms = len(query)
 
         n_docs = self.n_docs
-        distance = [0] * n_docs
+        similarity = [0] * n_docs
 
         for i in range(n_terms):
             if query[i] > 0:
                 for j in range(len(self.index[i])):
                     id = self.index[i][j]
-                    distance[id] = distance[id] + query[i] * self.tfidf[i][j]
+                    similarity[id] = similarity[id] + query[i] * self.tfidf[i][j]
 
-        ranked_list = sorted(range(n_docs), key=lambda k: -distance[k])
+        ranked_list = sorted(range(n_docs), key=lambda k: -similarity[k])
         top_k = min(top_k, n_docs)
 
         n_correct = 0
         for i in range(min(top_k, n_docs)):
             id = ranked_list[i]
-            if distance[id] == 0:  # or distance[id] < distance[ranked_list[0]] / 2:
+            if similarity[id] == 0:  # or similarity[id] < similarity[ranked_list[0]] / 2:
                 top_k = i
                 break
             if category[id] == 1:
@@ -75,7 +77,8 @@ class TFIDFWeighting(InvertedIndex):
         if top_k == 0:
             return 0
 
-        print '%d / %d - %f, %f' % (n_correct, top_k, distance[ranked_list[0]], distance[ranked_list[top_k - 1]])
+        if verbose:
+            print '%d / %d - %f, %f' % (n_correct, top_k, similarity[ranked_list[0]], similarity[ranked_list[top_k - 1]])
 
         if float(n_correct) / top_k > ratio_threshold:
             return 1
