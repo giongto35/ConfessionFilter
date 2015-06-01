@@ -1,29 +1,28 @@
-#!/usr/bin/env python
-
 import os
 import sys
 
 # Before importing some Django lib, we must have this
 from django.core.wsgi import get_wsgi_application
 
-from utils import *
-from configurations import *
-from formalize import formalize_all_files
-from extractor import extract_all_terms
-
-from inverted_index import InvertedIndex
-from tfidf_weighting import TFIDFWeighting
-from category_index import CagegoryIndex
-
 
 if __name__ == '__main__':
 
     # Import Django environment
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "configurations.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Confession.settings")
 
 
-# Improt Django models
+# Import Django models
 from Filter.models import ConfessionGroup, ConfessionDocument
+
+# Import other stuffs
+from Filter.utils import *
+from Filter.configurations import *
+from Filter.formalize import formalize_all_files
+from Filter.extractor import extract_all_terms
+
+from Filter.inverted_index import InvertedIndex
+from Filter.tfidf_weighting import TFIDFWeighting
+from Filter.category_index import CagegoryIndex
 
 
 if __name__ == '__main__':
