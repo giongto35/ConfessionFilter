@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'Filter',
     'Publisher',
     'Manager',
+    'Crawler'
 )
 
 MIDDLEWARE_CLASSES = (

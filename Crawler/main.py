@@ -15,15 +15,19 @@ if __name__ == '__main__':
 
 # Improt Django models
 from Filter.models import ConfessionGroup, ConfessionDocument
-from Publisher.models import PublishedConfession
 
 
 if __name__ == '__main__':
 
     application = get_wsgi_application()
 
-    # !!!TODO: Fetch all confessions from group labeling by 'legal' and
-    # post automatically, then move them into PublishedConfession
+    # !!!TODO: Crawl all confessions from Google drive, save them to database in
+    # group labeling by 'raw'
+    # ??? Marking crawled confessions in Google drive (Put something into the sheet ?)
 
-    # Assume that the legal group has been created
-    legal = ConfessionGroup.objects.filter(label='legal')[0]
+    raw = ConfessionGroup.objects.filter(label='raw')
+    if len(raw) == 0:
+        raw = ConfessionGroup.objects.create(label='raw')
+        raw.save()
+    else:
+        raw = raw[0]
