@@ -46,6 +46,9 @@ INSTALLED_APPS = (
     'bootstrap3',
 
     'Filter',
+    'Publisher',
+    'Manager',
+    'Crawler'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,3 +1,3 @@
-# ConfessionFilter
+# Confession.Filter
 
-This project is for filtering confession posts from Google drive. The qualified posts will be chosen if it does not violate Confession rule such as swearing or provoking or advertising... 
+This module will recognize and split confessions into two groups which are 'positive' and 'negative'

@@ -16,7 +16,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('document', models.TextField()),
-                ('date', models.TimeField(auto_now_add=True, null=True)),
+                ('submitted_date', models.TimeField(auto_now_add=True, null=True)),
+                ('comment', models.TextField(null=True, blank=True)),
+                ('classify_score', models.FloatField(null=True, blank=True)),
             ],
             options={
             },
