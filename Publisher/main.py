@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     application = get_wsgi_application()
 
-    # !!!TODO: Fetch all confessions from group labeling by 'legal' and
+    # !!!TODO: Fetch all confessions from group labeled by 'legal' and
     # post automatically, then move them into PublishedConfession
 
     # Assume that the legal group has been created

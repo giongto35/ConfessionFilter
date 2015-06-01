@@ -22,7 +22,7 @@ if __name__ == '__main__':
     application = get_wsgi_application()
 
     # !!!TODO: Crawl all confessions from Google drive, save them to database in
-    # group labeling by 'raw'
+    # group labeled by 'raw'
     # ??? Marking crawled confessions in Google drive (Put something into the sheet ?)
 
     raw = ConfessionGroup.objects.filter(label='raw')
