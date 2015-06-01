@@ -1,3 +1,3 @@
-# Confession.Publisher
+# Confession.Crawler
 
-This module will post legal confessions on Confession's Page automatically
+This module will crawl confessions from Google drive and save them into database
